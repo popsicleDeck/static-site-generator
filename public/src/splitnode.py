@@ -8,6 +8,7 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
             new_nodes.append(n)
             continue
         if n.text.count(delimiter) % 2 != 0:
+            print("BAD NODE:", repr(n.text), "DELIM:", delimiter)
             raise Exception("invalid Mardown syntax")
         splits = n.text.split(delimiter)
         for s in splits:
@@ -21,7 +22,6 @@ def split_nodes_delimiter(old_nodes, delimiter, text_type):
 
 def split_img_helper(text: str, new_nodes: list):
     markdowns = extract_markdown_images(text)
-    print(markdowns)
     if markdowns == []:
         if text != "":
             new_nodes.append(TextNode(text, TextType.TEXT))
@@ -70,13 +70,16 @@ def split_nodes_link(old_nodes):
         split_link_helper(n.text, final)
     return final
 
+def text_to_textnodes(text):
+    nodes = [TextNode(text, TextType.TEXT)]
+    nodes = split_nodes_delimiter(nodes, "**", TextType.BOLD)
+    nodes = split_nodes_delimiter(nodes, "_", TextType.ITALIC)
+    nodes = split_nodes_delimiter(nodes, "`", TextType.CODE)
+    nodes = split_nodes_image(nodes)
+    nodes = split_nodes_image(nodes)
+    return nodes
 
 
 
 
 
-
-
-        
-
-    
